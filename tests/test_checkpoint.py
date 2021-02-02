@@ -34,7 +34,7 @@ def test_checkpoint_splunk_ips(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netids host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -69,7 +69,7 @@ def test_checkpoint_splunk_firewall(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -106,7 +106,7 @@ def test_checkpoint_splunk_firewall_noise(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -140,7 +140,7 @@ def test_checkpoint_splunk_firewall2(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -174,7 +174,7 @@ def test_checkpoint_vsplunk_firewall(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
