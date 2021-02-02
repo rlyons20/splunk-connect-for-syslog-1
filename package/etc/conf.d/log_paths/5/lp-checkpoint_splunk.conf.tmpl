@@ -41,7 +41,6 @@ filter f_checkpoint_splunk_audit {
 
 filter f_checkpoint_splunk_security {
     match('Anti-Virus' value('.cp.product'))
-    or match('Anti-Virus' value("MESSAGE"))
     or match('Firewall' value('.cp.product'))
     or match('U[rR][lL]\h+Filtering' value('.cp.product'))
     or match('IPS' value('.cp.product'))
@@ -50,10 +49,8 @@ filter f_checkpoint_splunk_security {
     or match('Media\h+Encryption\h+&\h+Port\h+Protection' value('.cp.product'))
     or match('DLP' value('.cp.product'))
     or match('MTA' value('.cp.product'))
-    or match('MTA' value("MESSAGE"))
     or match('Anti\h+Spam' value('.cp.product'))
     or match('Anti-Spam' value('.cp.product'))
-    or match('Anti-Spam' value("MESSAGE"))
     or match('Application' value('.cp.product'))
     or match('Threat\h+Emulation' value('.cp.product'))
     or match('Threat\h+Extraction' value('.cp.product'))
