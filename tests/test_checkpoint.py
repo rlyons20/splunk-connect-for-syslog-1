@@ -410,7 +410,7 @@ audit_product_events_without_originsicname = [
     'time={{ epoch }}|hostname={{ host }}|product=SmartDashboard|action=Accept|ifdir=outbound|loguid={0x5fe321a8,0x2a,0x6563a00a,0x3fffaefd}|origin=10.160.99.101|sequencenum=1|time={{ epoch }}|version=5|additional_info=ca-bundle.crt|administrator=admin|client_ip=10.160.99.102|machine=C1359997769|subject=File Operation',
     'time={{ epoch }}|hostname={{ host }}|product=System Monitor|ifdir=inbound|loguid={0x5ffef7d6,0x0,0x6563a00a,0x336ee68e}|origin=10.160.99.101|sequencenum=1|time={{ epoch }}|version=5|cp_component_name=Threat Extraction Engine|cp_component_version=12|operation_results=Succeeded|package_action=Install|system_application=AutoUpdater',
     'time={{ epoch }}|hostname={{ host }}|product=SmartEvent Client|ifdir=inbound|loguid={0x60069487,0x0,0xe03ea00a,0x23654691}|origin=10.160.62.224|sequencenum=1|version=5|status=Started|update_service=1|version=R80.40',
-    'time={{ epoch }}|hostname={{ host }}|severity=Low|product=Core|ifdir=inbound|loguid={0x6000eef3,0x5,0xe03ea00a,0x2a66d4c7}|origin=10.160.62.224|sequencenum=16777215|version=1|event_type=Push Operation|op_guid={ae78a89e-3c48-4e4c-940b-ed23ee87cdbd}|op_type=Repair EP client|os_name=Windows Server 10.0 Standard Server Edition|os_version=10.0-14393-SP0.0-SMP|product_family=Endpoint|src=10.160.177.73|src_machine_name=C7553927437|src_user_name=Administrator'
+    'time={{ epoch }}|hostname={{ host }}|severity=Low|product=Core|ifdir=inbound|loguid={0x6000eef3,0x5,0xe03ea00a,0x2a66d4c7}|origin=10.160.62.224|sequencenum=16777215|version=1|event_type=Push Operation|op_guid={ae78a89e-3c48-4e4c-940b-ed23ee87cdbd}|op_type=Repair EP client|os_name=Windows Server 10.0 Standard Server Edition|os_version=10.0-14393-SP0.0-SMP|product_family=Endpoint|src=10.160.177.73|src_machine_name=C7553927437|src_user_name=Administrator',
 ];
 
 @pytest.mark.parametrize("audit_event", audit_product_events_with_originsicname)
@@ -504,37 +504,37 @@ security_product_events_without_originsicname = [
     'time={{ epoch }}|hostname={{ host }}|severity=Informational|confidence_level=High|product=Zero Phishing|action=Detect|ifdir=inbound|loguid={0x5ffc205f,0xb,0xe03ea00a,0x2a66d4c7}|origin=1.1.1.1|event_type=Phishing Event|product_family=Endpoint|protection_name=gen.ba.phishing|protection_type=Phishing Prevention|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
 ];
 
-@pytest.mark.parametrize("security_event", security_product_events_with_originsicname)
-def test_checkpoint_security_events_with_originsicname(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, security_event
-):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+# @pytest.mark.parametrize("security_event", security_product_events_with_originsicname)
+# def test_checkpoint_security_events_with_originsicname(
+#     record_property, setup_wordlist, setup_splunk, setup_sc4s, security_event
+# ):
+#     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+#     dt = datetime.datetime.now()
+#     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
-    # Tune time functions for Checkpoint
-    epoch = epoch[:-7]
+#     # Tune time functions for Checkpoint
+#     epoch = epoch[:-7]
 
-    mt = env.from_string(security_event + "\n")
-    message = mt.render(host=host, epoch=epoch)
+#     mt = env.from_string(security_event + "\n")
+#     message = mt.render(host=host, epoch=epoch)
 
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+#     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string(
-        'search _time={{ epoch }} index=netops host="cp_mgmt" sourcetype="cp_log" source="cp:security" _raw="{{ message }}"'
-    )
-    search = st.render(
-        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset, message=message.replace('\\','\\\\').replace('|', '\|')
-    )
+#     st = env.from_string(
+#         'search _time={{ epoch }} index=netops host="cp_mgmt" sourcetype="cp_log" source="cp:security" _raw="{{ message }}"'
+#     )
+#     search = st.render(
+#         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset, message=message.replace('\\','\\\\').replace('|', '\|')
+#     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+#     resultCount, eventCount = splunk_single(setup_splunk, search)
 
-    record_property("host", host)
-    record_property("resultCount", resultCount)
-    record_property("message", message)
+#     record_property("host", host)
+#     record_property("resultCount", resultCount)
+#     record_property("message", message)
 
-    assert resultCount == 1
+#     assert resultCount == 1
 
 @pytest.mark.parametrize("security_event2", security_product_events_without_originsicname)
 def test_checkpoint_security_events_without_originsicname(
