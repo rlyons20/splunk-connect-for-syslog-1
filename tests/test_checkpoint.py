@@ -502,39 +502,42 @@ security_product_events_without_originsicname = [
     'time={{ epoch }}|hostname={{ host }}|severity=Critical|confidence_level=Medium|product=Forensics|action=Prevent|ifdir=inbound|loguid={0x6002bd5b,0x0,0xe03ea00a,0x2a66d4c7}|origin=1.1.1.1|sequencenum=1|version=1|additional_info= |attack_status=Dormant|policy_name=Default Forensics settings|product_family=Endpoint|protection_name=Gen.Rep.exe|protection_type=File Reputation|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator|suspicious_events=Remote Logon Internal: ; Valid Accounts: ; |user_name= ',
     'time={{ epoch }}|hostname={{ host }}|severity=Critical|confidence_level=High|product=Anti-Bot|action=Prevent|ifdir=inbound|loguid={0x5ffd6981,0x16,0xe03ea00a,0x2a66d4c7}|origin=1.1.1.1|event_type=Anti Bot Event|policy_name=Default Anti-Bot settings|policy_number=1|process_username=Administrator|product_family=Endpoint|protection_name=Phishing.TC.aqbrwu|protection_type=URL Reputation|proxy_src_ip=3.3.3.3|src=4.4.4.4|src_machine_name=C7553927437|src_user_name=Administrator',
     'time={{ epoch }}|hostname={{ host }}|severity=Informational|confidence_level=High|product=Zero Phishing|action=Detect|ifdir=inbound|loguid={0x5ffc205f,0xb,0xe03ea00a,0x2a66d4c7}|origin=1.1.1.1|event_type=Phishing Event|product_family=Endpoint|protection_name=gen.ba.phishing|protection_type=Phishing Prevention|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
+    'time={{ epoch }}|hostname={{ host }}|severity=Informational|confidence_level=High|product=Anti Spam|action=Detect|ifdir=inbound|loguid={0x5ffc205f,0xb,0xe03ea00a,0x2a66d4c7}|origin=1.1.1.1|event_type=Phishing Event|product_family=Endpoint|protection_name=gen.ba.phishing|protection_type=Phishing Prevention|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
+    'time={{ epoch }}|hostname={{ host }}|severity=Informational|confidence_level=High|product=Anti-Virus|action=Detect|ifdir=inbound|loguid={0x5ffc205f,0xb,0xe03ea00a,0x2a66d4c7}|origin=1.1.1.1|event_type=Phishing Event|product_family=Endpoint|protection_name=gen.ba.phishing|protection_type=Phishing Prevention|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
+    'time={{ epoch }}|hostname={{ host }}|severity=Informational|confidence_level=High|product=MTA|action=Detect|ifdir=inbound|loguid={0x5ffc205f,0xb,0xe03ea00a,0x2a66d4c7}|origin=1.1.1.1|event_type=Phishing Event|product_family=Endpoint|protection_name=gen.ba.phishing|protection_type=Phishing Prevention|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
 ];
 
-# @pytest.mark.parametrize("security_event", security_product_events_with_originsicname)
-# def test_checkpoint_security_events_with_originsicname(
-#     record_property, setup_wordlist, setup_splunk, setup_sc4s, security_event
-# ):
-#     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+@pytest.mark.parametrize("security_event", security_product_events_with_originsicname)
+def test_checkpoint_security_events_with_originsicname(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, security_event
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-#     dt = datetime.datetime.now()
-#     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
-#     # Tune time functions for Checkpoint
-#     epoch = epoch[:-7]
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
 
-#     mt = env.from_string(security_event + "\n")
-#     message = mt.render(host=host, epoch=epoch)
+    mt = env.from_string(security_event + "\n")
+    message = mt.render(host=host, epoch=epoch)
 
-#     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-#     st = env.from_string(
-#         'search _time={{ epoch }} index=netops host="cp_mgmt" sourcetype="cp_log" source="cp:security" _raw="{{ message }}"'
-#     )
-#     search = st.render(
-#         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset, message=message.replace('\\','\\\\').replace('|', '\|')
-#     )
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops sourcetype="cp_log" source="cp:security" _raw="{{ message }}"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset, message=message.replace('\\','\\\\').replace('|', '\|')
+    )
 
-#     resultCount, eventCount = splunk_single(setup_splunk, search)
+    resultCount, eventCount = splunk_single(setup_splunk, search)
 
-#     record_property("host", host)
-#     record_property("resultCount", resultCount)
-#     record_property("message", message)
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
 
-#     assert resultCount == 1
+    assert resultCount == 1
 
 @pytest.mark.parametrize("security_event2", security_product_events_without_originsicname)
 def test_checkpoint_security_events_without_originsicname(
@@ -558,6 +561,49 @@ def test_checkpoint_security_events_without_originsicname(
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset, message=message.replace('\\','\\\\').replace('|', '\|') 
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+network_product_dummy_events=[
+    'time={{ epoch }}|hostname={{ host }}|severity=Low|product=IOS Profile|ifdir=inbound|loguid={0x60069d02,0x2e,0xe03ea00a,0x23654691}|origin=1.1.1.1|sequencenum=1|version=1|action_details=Started|scanned_drives=C:\|sig_ver=202012122231|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
+    'time={{ epoch }}|hostname={{ host }}|severity=Low|product=Device|ifdir=inbound|loguid={0x60069d02,0x2e,0xe03ea00a,0x23654691}|origin=1.1.1.1|sequencenum=1|version=1|action_details=Started|scanned_drives=C:\|sig_ver=202012122231|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
+    'time={{ epoch }}|hostname={{ host }}|severity=Low|product=WIFI|ifdir=inbound|loguid={0x60069d02,0x2e,0xe03ea00a,0x23654691}|origin=1.1.1.1|sequencenum=1|version=1|action_details=Started|scanned_drives=C:\|sig_ver=202012122231|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
+    'time={{ epoch }}|hostname={{ host }}|severity=Low|product=Cellular|ifdir=inbound|loguid={0x60069d02,0x2e,0xe03ea00a,0x23654691}|origin=1.1.1.1|sequencenum=1|version=1|action_details=Started|scanned_drives=C:\|sig_ver=202012122231|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
+    'time={{ epoch }}|hostname={{ host }}|severity=Low|product=Text Message|ifdir=inbound|loguid={0x60069d02,0x2e,0xe03ea00a,0x23654691}|origin=1.1.1.1|sequencenum=1|version=1|action_details=Started|scanned_drives=C:\|sig_ver=202012122231|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
+    'time={{ epoch }}|hostname={{ host }}|severity=Low|product=Network Access|ifdir=inbound|loguid={0x60069d02,0x2e,0xe03ea00a,0x23654691}|origin=1.1.1.1|sequencenum=1|version=1|action_details=Started|scanned_drives=C:\|sig_ver=202012122231|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
+    'time={{ epoch }}|hostname={{ host }}|severity=Low|product=VPN|ifdir=inbound|loguid={0x60069d02,0x2e,0xe03ea00a,0x23654691}|origin=1.1.1.1|sequencenum=1|version=1|action_details=Started|scanned_drives=C:\|sig_ver=202012122231|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
+    'time={{ epoch }}|hostname={{ host }}|severity=Low|product=Mobile|ifdir=inbound|loguid={0x60069d02,0x2e,0xe03ea00a,0x23654691}|origin=1.1.1.1|sequencenum=1|version=1|action_details=Started|scanned_drives=C:\|sig_ver=202012122231|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
+];
+
+@pytest.mark.parametrize("network_event", network_product_dummy_events)
+def test_checkpoint_network_events_without_originsicname(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, network_event
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
+
+    mt = env.from_string(network_event + "\n")
+    message = mt.render(host=host, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="cp:network" _raw="{{ message }}"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset, message=message.replace('\\','\\\\').replace('|', '\|')
     )
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
