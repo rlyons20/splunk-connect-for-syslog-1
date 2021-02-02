@@ -425,7 +425,7 @@ def test_checkpoint_audit_events_with_originsicname(
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
 
-    mt = env.from_string(event + "\n")
+    mt = env.from_string(audit_event + "\n")
     message = mt.render(host=host, epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
@@ -457,7 +457,7 @@ def test_checkpoint_audit_events_without_originsicname(
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
 
-    mt = env.from_string(event + "\n")
+    mt = env.from_string(audit_event2 + "\n")
     message = mt.render(host=host, epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
@@ -516,7 +516,7 @@ def test_checkpoint_security_events_with_originsicname(
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
 
-    mt = env.from_string(event + "\n")
+    mt = env.from_string(security_event + "\n")
     message = mt.render(host=host, epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
@@ -548,7 +548,7 @@ def test_checkpoint_security_events_without_originsicname(
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
 
-    mt = env.from_string(event + "\n")
+    mt = env.from_string(security_event2 + "\n")
     message = mt.render(host=host,epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
