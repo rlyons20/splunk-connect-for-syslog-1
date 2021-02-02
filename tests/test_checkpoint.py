@@ -579,34 +579,34 @@ network_product_dummy_events=[
     'time={{ epoch }}|hostname={{ host }}|severity=Low|product=Mobile|ifdir=inbound|loguid={0x60069d02,0x2e,0xe03ea00a,0x23654691}|origin=1.1.1.1|sequencenum=1|version=1|action_details=Started|scanned_drives=C:\|sig_ver=202012122231|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
 ];
 
-# @pytest.mark.parametrize("network_event", network_product_dummy_events)
-# def test_checkpoint_network_events_without_originsicname(
-#     record_property, setup_wordlist, setup_splunk, setup_sc4s, network_event
-# ):
-#     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+@pytest.mark.parametrize("network_event", network_product_dummy_events)
+def test_checkpoint_network_events_without_originsicname(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, network_event
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-#     dt = datetime.datetime.now()
-#     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
-#     # Tune time functions for Checkpoint
-#     epoch = epoch[:-7]
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
 
-#     mt = env.from_string(network_event + "\n")
-#     message = mt.render(host=host, epoch=epoch)
+    mt = env.from_string(network_event + "\n")
+    message = mt.render(host=host, epoch=epoch)
 
-#     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-#     st = env.from_string(
-#         'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="cp:network" _raw="{{ message }}"'
-#     )
-#     search = st.render(
-#         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset, message=message.replace('\\','\\\\').replace('|', '\|')
-#     )
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="cp:network" _raw="{{ message }}"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset, message=message.replace('\\','\\\\').replace('|', '\|')
+    )
 
-#     resultCount, eventCount = splunk_single(setup_splunk, search)
+    resultCount, eventCount = splunk_single(setup_splunk, search)
 
-#     record_property("host", host)
-#     record_property("resultCount", resultCount)
-#     record_property("message", message)
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
 
-#     assert resultCount == 1
+    assert resultCount == 1
