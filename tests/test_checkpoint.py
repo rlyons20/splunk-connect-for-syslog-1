@@ -413,9 +413,9 @@ audit_product_events_without_originsicname = [
     'time={{ epoch }}|hostname={{ host }}|severity=Low|product=Core|ifdir=inbound|loguid={0x6000eef3,0x5,0xe03ea00a,0x2a66d4c7}|origin=10.160.62.224|sequencenum=16777215|version=1|event_type=Push Operation|op_guid={ae78a89e-3c48-4e4c-940b-ed23ee87cdbd}|op_type=Repair EP client|os_name=Windows Server 10.0 Standard Server Edition|os_version=10.0-14393-SP0.0-SMP|product_family=Endpoint|src=10.160.177.73|src_machine_name=C7553927437|src_user_name=Administrator'
 ];
 
-@pytest.mark.parametrize("event", audit_product_events_with_originsicname)
+@pytest.mark.parametrize("audit_event", audit_product_events_with_originsicname)
 def test_checkpoint_audit_events_with_originsicname(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, audit_event
 ):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
@@ -445,9 +445,9 @@ def test_checkpoint_audit_events_with_originsicname(
 
     assert resultCount == 1
 
-@pytest.mark.parametrize("event", audit_product_events_without_originsicname)
+@pytest.mark.parametrize("audit_event2", audit_product_events_without_originsicname)
 def test_checkpoint_audit_events_without_originsicname(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, audit_event2
 ):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
@@ -504,9 +504,9 @@ security_product_events_without_originsicname = [
     'time={{ epoch }}|hostname={{ host }}|severity=Informational|confidence_level=High|product=Zero Phishing|action=Detect|ifdir=inbound|loguid={0x5ffc205f,0xb,0xe03ea00a,0x2a66d4c7}|origin=1.1.1.1|event_type=Phishing Event|product_family=Endpoint|protection_name=gen.ba.phishing|protection_type=Phishing Prevention|src=2.2.2.2|src_machine_name=C7553927437|src_user_name=Administrator',
 ];
 
-@pytest.mark.parametrize("event", security_product_events_with_originsicname)
+@pytest.mark.parametrize("security_event", security_product_events_with_originsicname)
 def test_checkpoint_security_events_with_originsicname(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, security_event
 ):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
@@ -536,9 +536,9 @@ def test_checkpoint_security_events_with_originsicname(
 
     assert resultCount == 1
 
-@pytest.mark.parametrize("event", security_product_events_without_originsicname)
+@pytest.mark.parametrize("security_event2", security_product_events_without_originsicname)
 def test_checkpoint_security_events_without_originsicname(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, security_event2
 ):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
